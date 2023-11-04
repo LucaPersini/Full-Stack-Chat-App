@@ -1,5 +1,6 @@
 import io from 'socket.io-client'
+import config from '../config'
 
-const socket = io('http://localhost:3000')
+const socket = io(config.API_DOMAIN)
 
 export default socket

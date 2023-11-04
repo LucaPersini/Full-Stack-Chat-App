@@ -20,10 +20,13 @@ app.use(cors())
 
 const port = process.env.PORT || 3000
 
-mongoose.connect(process.env.DATABASE_URL)
+mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     server.listen(port)
     console.log(`Database connected at port ${port}`)
+  })
+  .catch(error => {
+    console.log(error)
   })
 
 io.on('connection', socket => {
