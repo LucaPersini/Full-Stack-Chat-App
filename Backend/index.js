@@ -38,8 +38,8 @@ io.on('connection', socket => {
     io.emit('delete-message', id)
   })
 
-  socket.on('delete-messages', messagesToDelete => {
-    io.emit('delete-messages', messagesToDelete)
+  socket.on('delete-messages', deletedUsername => {
+    io.emit('delete-messages', deletedUsername)
   })
 })
 

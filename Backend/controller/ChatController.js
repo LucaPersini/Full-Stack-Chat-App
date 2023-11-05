@@ -131,13 +131,13 @@ const DeleteAccount = async function(req, res) {
     return res.json({status:'error', error:'The account has not been deleted.'})
   }
 
-  try {
-    const messagesToDelete = await Message.find({username})
-    const result = await Message.deleteMany({username})
-    return res.json({status: 'ok', message:"The account has been deleted.", messagesToDelete})
-  } catch (error) {
-    return res.json({status:'error', error:'The messages have not been deleted.'})
+  try{
+    await Message.deleteMany({username})
   }
+  catch(error) {
+
+  }
+  return res.json({status: 'ok', message: 'The account has been deleted', username})
 }
 
 module.exports = {

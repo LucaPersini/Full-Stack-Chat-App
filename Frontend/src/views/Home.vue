@@ -19,7 +19,7 @@ export default {
     let username = ref('')
     let messages = ref([])
     let textMessage = ref('')
-    let selectedIndex = ref('')
+    let selectedId = ref('')
     let isVisible = ref(false)
     let isBannerVisible = ref(false)
     const headersConfig = ref({
@@ -93,14 +93,13 @@ export default {
       ScrollToBottom()
     }
 
-    const DeleteConfirmation = async function(index) {
-      selectedIndex.value = index
+    const DeleteConfirmation = async function(messageId) {
+      selectedId.value = messageId
     }
 
     const DeleteMessage = async function(id) {
       try{
         const result = await axios.delete(`${config.API_DOMAIN}/api/delete-message/${id}`, headersConfig.value)
-        selectedIndex.value = ''
         if(result.data.status == 'ok') {
           socket.emit('delete-message', id)
         }
@@ -111,7 +110,7 @@ export default {
       catch (error) {
         console.log(error.message)
       }
-
+      selectedId.value = ''
       ScrollToBottom()
     }
 
@@ -137,8 +136,8 @@ export default {
         } else {
           alert('Your account has been deleted.')
           router.push('/')
-          const messagesTodelete = result.data.messagesToDelete
-          socket.emit('delete-messages', messagesTodelete)
+          const deletedUsername = result.data.username
+          socket.emit('delete-messages', deletedUsername)
         }
       }
       catch (error) {
@@ -168,8 +167,8 @@ export default {
         messages.value = messages.value.filter(message => message._id !== id)
       })
 
-      socket.on('delete-messages', messagesToDelete => {
-        messages.value = messages.value.filter(message => !messagesToDelete.value.includes(message))
+      socket.on('delete-messages', deletedUsername => {
+        messages.value = messages.value.filter(message => message.username !== deletedUsername)
       })
     })
 
@@ -181,7 +180,7 @@ export default {
       textMessage,
       SendMessage,
       DeleteConfirmation,
-      selectedIndex,
+      selectedId,
       DeleteMessage,
       isVisible,
       ShowMenu,
@@ -223,17 +222,17 @@ export default {
         <div v-for="(message, index) in messages" class="mx-auto" :key="index">
           <div v-if="message.username == username" class="relative flex flex-col my-2">
             <div :id="message._id">
-              <div v-if="selectedIndex == index" class="bg-slate-400 w-fit px-4 py-2 rounded-xl">
+              <div v-if="selectedId == message._id" class="bg-slate-400 w-fit px-4 py-2 rounded-xl">
                 <p class="my-2">Do you want to delete this message?</p>
                 <div class="flex flex-row justify-center">
                   <button @click="DeleteMessage(message._id)" class="bg-red-700 rounded-md text-white px-2 py-1 m-1 active:bg-red-600" >Yes</button>
-                  <button @click="selectedIndex = ''" class="bg-slate-800 rounded-md text-white px-2 py-1 m-1 active:bg-slate-600">No</button>
+                  <button @click="selectedId = ''" class="bg-slate-800 rounded-md text-white px-2 py-1 m-1 active:bg-slate-600">No</button>
                 </div>
               </div>
               <div v-else>
                 <Message class="bg-slate-400 w-fit px-4 py-2 rounded-xl" user="You" :text="message.text" :date="message.date"/>
                 <div class="bg-slate-200 w-fit rounded-full flex absolute -top-1 -right-1 border-2 border-slate-200">
-                  <i @click="DeleteConfirmation(index)" class="fa-solid fa-circle-xmark text-red-700 hover:cursor-pointer active:text-red-600"></i>
+                  <i @click="DeleteConfirmation(message._id)" class="fa-solid fa-circle-xmark text-red-700 hover:cursor-pointer active:text-red-600"></i>
                 </div>
               </div>
             </div>
