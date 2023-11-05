@@ -34,7 +34,7 @@ Then run with
 
 ```shell
 cd frontend; npm run dev
-cd backend; nodemon inex.js
+cd backend; nodemon index.js
 ```
 
 ## Background & Motivation
