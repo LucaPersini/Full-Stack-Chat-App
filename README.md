@@ -19,7 +19,7 @@ You can find an online demo [here](https://654786513959ee3ffd8e0017--tubular-tru
   - Express.js
   - MongoDB
   - JsonWebToken
-  - Socket.io
+  - Socket.IO
 
 ## Deployment
 
@@ -43,5 +43,10 @@ The goal of this project is for me to learn and put into practice everything I h
 
   - Getting more familiar with Node.js, Express.js and MongoDB
   - Getting more familiar with Vue.js e Tailwind
-  - First time using Socket.io
+  - First time using Socket.IO
   - First time using JsonWebToken and Bcrypt.js
+
+
+## Upload
+
+The frontend is hosted by Netlify, the backend is hosted by Render.
